@@ -15,20 +15,26 @@ jobs:
         shell: bash
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      
-    - name: Setup Terraform
-      run: terraform init
-        
-    - name: Terraform Format
-      run: terraform fmt 
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-    - name: Terraform Validate
-      run: terraform validate 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.5
 
-    - name: Terraform plan
-      run: terraform plan
+      - name: Terraform Init
+        run: terraform init
 
-    - name: Terraform Apply
-      run: terraform apply -auto-approve 
+      - name: Terraform Format
+        run: terraform fmt 
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve
